@@ -21,7 +21,7 @@ module.exports = function(grunt) {
     filenamecustom: '<%= filename %>-custom',
     license: grunt.file.read('LICENSE').replace(/(^|\n)(.*)*/g, '** $2'),
     meta: {
-      modules: 'angular.module("cjm.directives", ["cjm.directives.posit", "cjm.directives.resiz"]);',
+      modules: 'angular.module("cjm.directives", [<%= srcModules %>]);',
       cssInclude: '',
       cssFileBanner: '/* Include this file in your html if you are using the CSP mode. */\n\n',
       cssFileDest: '<%= dist %>/<%= filename %>-<%= pkg.version %>-csp.css',

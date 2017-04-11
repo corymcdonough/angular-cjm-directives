@@ -9,7 +9,7 @@ angular.module('cjm.directives.posit', [])
    **   cjm-posit-bounding-id:     Bounds this posit by id
    **
    */
-  .directive('cjmPosit', ['$document', '$window', function($document, $window) {
+  .directive('cjmPosit', ['$document', 'cjmBoundingService', function($document, $bounding) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
@@ -17,6 +17,7 @@ angular.module('cjm.directives.posit', [])
         var startY;
         var x = 0;
         var y = 0;
+        var boundingElement = false;
         var container = false;
 
         element.css({
@@ -27,6 +28,15 @@ angular.module('cjm.directives.posit', [])
         var handleElem = false;
         if(attrs.cjmPosit) {
           handleElem = angular.element(element[0].querySelector(attrs.cjmPosit));
+        }
+
+        if(attrs.cjmPositBoundingParent !== undefined ){
+          boundingElement = angular.element(element[0].parentElement);
+        } else if (attrs.cjmPositBoundingId) {
+          var elemById = document.getElementById(attrs.cjmPositBoundingId);
+          if(elemById) {
+            boundingElement = angular.element(elemById);
+          }
         }
 
         if(handleElem[0]) {
@@ -44,7 +54,9 @@ angular.module('cjm.directives.posit', [])
         function beginMove($event) {
           if(!angular.element($event.target).hasClass('no-posit')) {
             $event.preventDefault();
-            getBoundingContainer();
+            if(boundingElement) {
+              container = $bounding.getBoundingContainer(element, boundingElement);
+            }
             x = element[0].offsetLeft;
             y = element[0].offsetTop;
             startX = $event.pageX - x;
@@ -63,67 +75,6 @@ angular.module('cjm.directives.posit', [])
         function endMove() {
           $document.off('mousemove', doMove);
           $document.off('mouseup', endMove);
-        }
-
-        function getBoundingContainer() {
-          var boundingElement;
-          container = false;
-          if(attrs.cjmPositBoundingParent !== undefined) {
-            boundingElement = angular.element(element[0].parentElement);
-
-            container = {
-              left: 0,
-              top: 0,
-              width: boundingElement[0].offsetWidth,
-              height: boundingElement[0].offsetHeight,
-              right: boundingElement[0].offsetWidth,
-              bottom: boundingElement[0].offsetHeight
-            };
-
-          } else if(attrs.cjmPositBoundingId) {
-            boundingElement = angular.element(document.getElementById(attrs.cjmPositBoundingId));
-            var boundToAncestor = false;
-            var absoluteAncestor = false;
-            var absoluteOffsetX = 0;
-            var absoluteOffsetY = 0;
-            if(boundingElement) {
-              var ancestorElement = element;
-              while (ancestorElement[0].parentElement && !boundToAncestor) {
-                ancestorElement = angular.element(ancestorElement[0].parentElement);
-                if(ancestorElement[0].id === attrs.cjmPositBoundingId) {
-                  boundToAncestor = true;
-                }
-                if($window.getComputedStyle(ancestorElement[0], null).getPropertyValue('position') === 'absolute') {
-                  absoluteAncestor = true;
-                  absoluteOffsetX += ancestorElement[0].offsetLeft;
-                  absoluteOffsetY += ancestorElement[0].offsetTop;
-                }
-              }
-
-              if(boundToAncestor) {
-                container = {
-                  left: boundingElement[0].offsetLeft - absoluteOffsetX,
-                  top: boundingElement[0].offsetTop - absoluteOffsetY,
-                  width: boundingElement[0].offsetWidth,
-                  height: boundingElement[0].offsetHeight,
-                  right: 0,
-                  bottom: 0
-                };
-              } else {
-                var rectBounding = boundingElement[0].getBoundingClientRect();
-                container = {
-                  left: rectBounding.left - absoluteOffsetX + window.scrollX,
-                  top: rectBounding.top - absoluteOffsetY + window.scrollY,
-                  width: boundingElement[0].offsetWidth,
-                  height: boundingElement[0].offsetHeight,
-                  right: 0,
-                  bottom: 0
-                };
-              }
-              container.right = container.left + container.width;
-              container.bottom = container.top + container.height;
-            }
-          }
         }
 
         function setPosition() {
@@ -151,8 +102,8 @@ angular.module('cjm.directives.posit', [])
           });
         }
 
-        if(attrs.cjmPositBoundingParent !== undefined || attrs.cjmPositBoundingId) {
-          getBoundingContainer();
+        if(boundingElement) {
+          container = $bounding.getBoundingContainer(element, boundingElement);
           x = element[0].offsetLeft;
           y = element[0].offsetTop;
           setPosition(); // set the initial position of the element within the bounds

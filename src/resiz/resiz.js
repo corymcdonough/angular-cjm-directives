@@ -9,7 +9,7 @@ angular.module('cjm.directives.resiz', [])
    **   cjm-resiz-bounding-id:     Bounds this resiz by id
    **
    */
-  .directive('cjmResiz', ['$document', '$window', function($document, $window) {
+  .directive('cjmResiz', ['$document', 'cjmBoundingService', function($document, $bounding) {
     return {
       restrict: 'A',
       link: function(scope, element, attrs) {
@@ -45,10 +45,20 @@ angular.module('cjm.directives.resiz', [])
         var isResizeWest = false;
 
         var handleElem = false;
+        var boundingElement = false;
         var container = false;
 
         if(attrs.cjmResiz) {
           handleElem = angular.element(element[0].querySelector(attrs.cjmResiz));
+        }
+
+        if(attrs.cjmResizBoundingParent !== undefined ){
+          boundingElement = angular.element(element[0].parentElement);
+        } else if (attrs.cjmResizBoundingId) {
+          var elemById = document.getElementById(attrs.cjmResizBoundingId);
+          if(elemById) {
+            boundingElement = angular.element(elemById);
+          }
         }
 
         if(!handleElem[0]) {
@@ -153,7 +163,9 @@ angular.module('cjm.directives.resiz', [])
 
         function beginResize(event) {
           event.preventDefault();
-          getBoundingContainer();
+          if(boundingElement) {
+            container = $bounding.getBoundingContainer(element, boundingElement);
+          }
           width = element[0].offsetWidth;
           height = element[0].offsetHeight;
           x = element[0].offsetLeft;
@@ -216,67 +228,6 @@ angular.module('cjm.directives.resiz', [])
         function endResize() {
           $document.off('mousemove', doResize);
           $document.off('mouseup', endResize);
-        }
-
-        function getBoundingContainer() {
-          container = false;
-          var boundingElement;
-          if(attrs.cjmResizBoundingParent !== undefined) {
-            boundingElement = angular.element(element[0].parentElement);
-
-            container = {
-              left: 0,
-              top: 0,
-              width: boundingElement[0].offsetWidth,
-              height: boundingElement[0].offsetHeight,
-              right: boundingElement[0].offsetWidth,
-              bottom: boundingElement[0].offsetHeight
-            };
-
-          } else if(attrs.cjmResizBoundingId) {
-            boundingElement = angular.element(document.getElementById(attrs.cjmResizBoundingId));
-            var boundToAncestor = false;
-            var absoluteAncestor = false;
-            var absoluteOffsetX = 0;
-            var absoluteOffsetY = 0;
-            if(boundingElement) {
-              var ancestorElement = element;
-              while (ancestorElement[0].parentElement && !boundToAncestor) {
-                ancestorElement = angular.element(ancestorElement[0].parentElement);
-                if(ancestorElement[0].id === attrs.cjmResizBoundingId) {
-                  boundToAncestor = true;
-                }
-                if($window.getComputedStyle(ancestorElement[0], null).getPropertyValue('position') === 'absolute') {
-                  absoluteAncestor = true;
-                  absoluteOffsetX += ancestorElement[0].offsetLeft;
-                  absoluteOffsetY += ancestorElement[0].offsetTop;
-                }
-              }
-
-              if(boundToAncestor) {
-                container = {
-                  left: boundingElement[0].offsetLeft - absoluteOffsetX,
-                  top: boundingElement[0].offsetTop - absoluteOffsetY,
-                  width: boundingElement[0].offsetWidth,
-                  height: boundingElement[0].offsetHeight,
-                  right: 0,
-                  bottom: 0
-                };
-              } else {
-                var rectBounding = boundingElement[0].getBoundingClientRect();
-                container = {
-                  left: rectBounding.left - absoluteOffsetX + window.scrollX,
-                  top: rectBounding.top - absoluteOffsetY + window.scrollY,
-                  width: boundingElement[0].offsetWidth,
-                  height: boundingElement[0].offsetHeight,
-                  right: 0,
-                  bottom: 0
-                };
-              }
-              container.right = container.left + container.width;
-              container.bottom = container.top + container.height;
-            }
-          }
         }
 
         function getMinimums() {
