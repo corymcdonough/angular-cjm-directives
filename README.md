@@ -1,2 +1,2 @@
-# angular-edicts
+# angular-cjm-edicts
 Some simple directives for angular
