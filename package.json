@@ -1,0 +1,39 @@
+{
+  "name": "angular-cjm-directives",
+  "version": "0.0.1",
+  "description": "Some simple directives for angular",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/corymcdonough/angular-cjm-directives.git"
+  },
+  "keywords": [
+    "angular",
+    "ui",
+    "directives",
+    "draggable",
+    "posit",
+    "resizable",
+    "resiz"
+  ],
+  "author": "Cory McDonough <xcorionx@gmail.com> (https://www.npmjs.com/~corymcd)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/corymcdonough/angular-cjm-directives/issues"
+  },
+  "dependencies": {
+    "angular": "1.x"
+  },
+  "homepage": "https://github.com/corymcdonough/angular-cjm-directives#readme",
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-uglify": "^2.3.0",
+    "grunt-eslint": "^19.0.0",
+    "load-grunt-tasks": "^3.5.2"
+  }
+}

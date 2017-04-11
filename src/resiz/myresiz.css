@@ -1,0 +1,13 @@
+[my-resiz]>.resiz-handle {
+  cursor: nwse-resize;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  top: auto;
+  left: auto;
+  color: gray;
+  transform: scaleX(-1);
+  -moz-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  -ms-transform: scaleX(-1);
+}
