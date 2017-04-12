@@ -1,4 +1,4 @@
-angular.module('cjm.directives.resiz', [])
+angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
   /* Usage:
    **   <div cjm-resiz>
    **   <div cjm-resiz="childHandleSelector">

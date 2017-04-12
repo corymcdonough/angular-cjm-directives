@@ -1,3 +1,4 @@
+require('../bounding');
 require('./posit');
 
 var MODULE_NAME = 'cjm.directives.module.posit';

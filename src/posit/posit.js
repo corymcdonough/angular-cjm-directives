@@ -1,4 +1,4 @@
-angular.module('cjm.directives.posit', [])
+angular.module('cjm.directives.posit', ['cjm.directives.bounding'])
   /* Usage:
    **   <div cjm-posit>
    **   <div cjm-posit="childHandleSelector">

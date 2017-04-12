@@ -1,3 +1,4 @@
+require('../bounding');
 require('./resiz');
 
 var MODULE_NAME = 'cjm.directives.module.resiz';
