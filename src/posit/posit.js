@@ -12,7 +12,7 @@ angular.module('cjm.directives.posit', ['cjm.directives.bounding'])
   .directive('cjmPosit', ['$document', 'cjmBoundingService', function($document, $bounding) {
     return {
       restrict: 'A',
-      link: function(scope, element, attrs) {
+      link(scope, element, attrs) {
         var startX;
         var startY;
         var x = 0;
@@ -30,10 +30,10 @@ angular.module('cjm.directives.posit', ['cjm.directives.bounding'])
           handleElem = angular.element(element[0].querySelector(attrs.cjmPosit));
         }
 
-        if(attrs.cjmPositBoundingParent !== undefined ){
+        if(attrs.cjmPositBoundingParent !== undefined) {
           boundingElement = angular.element(element[0].parentElement);
-        } else if (attrs.cjmPositBoundingId) {
-          var elemById = document.getElementById(attrs.cjmPositBoundingId);
+        } else if(attrs.cjmPositBoundingId) {
+          var elemById = $document[0].getElementById(attrs.cjmPositBoundingId);
           if(elemById) {
             boundingElement = angular.element(elemById);
           }
@@ -82,23 +82,22 @@ angular.module('cjm.directives.posit', ['cjm.directives.bounding'])
           var height = element[0].offsetHeight;
 
           if(container) {
-
             if(x < container.left || width > container.width) {
-              x = container.left;
+              x = container.left - 1;
             } else if(container.right < x + width) {
               x = container.right - width;
             }
 
             if(y < container.top || height > container.height) {
-              y = container.top;
+              y = container.top - 1;
             } else if(container.bottom < y + height) {
               y = container.bottom - height;
             }
           }
 
           element.css({
-            top: y + 'px',
-            left: x + 'px'
+            top: `${y}px`,
+            left: `${x}px`
           });
         }
 

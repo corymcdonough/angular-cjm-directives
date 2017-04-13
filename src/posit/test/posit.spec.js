@@ -2,19 +2,19 @@
 
 describe('Directive: positionable', function() {
   // load the directive's module and view
-  beforeEach(module('cartographyApp.mypositionable'));
-  beforeEach(module('app/mypositionable/mypositionable.html'));
+  // beforeEach(module('cartographyApp.mypositionable'));
+  // beforeEach(module('app/mypositionable/mypositionable.html'));
 
-  var element, scope;
+  // var element, scope;
 
-  beforeEach(inject(function($rootScope) {
-    scope = $rootScope.$new();
-  }));
+  // beforeEach(inject(function($rootScope) {
+  //   scope = $rootScope.$new();
+  // }));
 
-  /*it('should make hidden element visible', inject(function($compile) {
-    element = angular.element('<mypositionable></mypositionable>');
-    element = $compile(element)(scope);
-    scope.$apply();
-    expect(element.text()).to.equal('this is the positionable directive');
-  }));*/
+  // it('should make hidden element visible', inject(function($compile) {
+  //   element = angular.element('<mypositionable></mypositionable>');
+  //   element = $compile(element)(scope);
+  //   scope.$apply();
+  //   expect(element.text()).to.equal('this is the positionable directive');
+  // }));
 });

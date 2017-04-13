@@ -1,6 +1,6 @@
 {
   "name": "angular-cjm-directives",
-  "version": "0.2.0-0",
+  "version": "0.3.0",
   "description": "Some simple directives for angular",
   "main": "index.js",
   "scripts": {
@@ -29,9 +29,13 @@
   },
   "homepage": "https://github.com/corymcdonough/angular-cjm-directives#readme",
   "devDependencies": {
+    "babel-eslint": "^7.2.2",
+    "babel-preset-es2015": "^6.24.1",
     "colors": "^1.1.2",
     "eslint": "^3.19.0",
+    "eslint-plugin-angular": "^2.3.0",
     "grunt": "^1.0.1",
+    "grunt-babel": "^6.0.0",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-uglify": "^2.3.0",
     "grunt-ddescribe-iit": "0.0.7",

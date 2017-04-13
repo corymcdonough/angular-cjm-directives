@@ -1,0 +1,13 @@
+{
+    "extends": "./base.eslintrc",
+    "env" : {
+      "browser": true
+    },
+    "globals": {
+      "angular": true,
+      "module" : true
+    },
+    "plugins": [
+      "angular"
+    ]
+}

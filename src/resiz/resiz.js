@@ -9,10 +9,10 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
    **   cjm-resiz-bounding-id:     Bounds this resiz by id
    **
    */
-  .directive('cjmResiz', ['$document', 'cjmBoundingService', function($document, $bounding) {
+  .directive('cjmResiz', ['$window', '$document', 'cjmBoundingService', function($window, $document, $bounding) {
     return {
       restrict: 'A',
-      link: function(scope, element, attrs) {
+      link(scope, element, attrs) {
         // variables for tracking the minimum allowable size
         var minWidth = 0;
         var minHeight = 0;
@@ -52,10 +52,10 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
           handleElem = angular.element(element[0].querySelector(attrs.cjmResiz));
         }
 
-        if(attrs.cjmResizBoundingParent !== undefined ){
+        if(attrs.cjmResizBoundingParent !== undefined) {
           boundingElement = angular.element(element[0].parentElement);
-        } else if (attrs.cjmResizBoundingId) {
-          var elemById = document.getElementById(attrs.cjmResizBoundingId);
+        } else if(attrs.cjmResizBoundingId) {
+          var elemById = $document[0].getElementById(attrs.cjmResizBoundingId);
           if(elemById) {
             boundingElement = angular.element(elemById);
           }
@@ -84,6 +84,8 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
             }
           }
         }
+
+        handleElem.on('mousedown', beginResize);
 
         function getUnknownResize(resizeLimits) {
           resizeLimits = resizeLimits || 'any';
@@ -279,7 +281,6 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
         }
 
         function setSize(overrideToAll) {
-
           getMinimums();
 
           if(isResizeAll || overrideToAll) {
@@ -301,25 +302,25 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
 
           if(width !== preResizeWidth) {
             element.css({
-              width: width + 'px'
+              width: `${width}px`
             });
           }
 
           if(height !== preResizeHeight) {
             element.css({
-              height: height + 'px'
+              height: `${height}px`
             });
           }
 
           if(x !== preResizeX) {
             element.css({
-              left: x + 'px'
+              left: `${x}px`
             });
           }
 
           if(y !== preResizeY) {
             element.css({
-              top: y + 'px'
+              top: `${y}px`
             });
           }
 
@@ -417,11 +418,7 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
               }
             }
           }
-
         }
-
-        handleElem.on('mousedown', beginResize);
-
       }
     };
   }]);

@@ -1,0 +1,9 @@
+{
+    "extends": "./angular.eslintrc",
+    "globals": {
+        "inject": true
+    },
+    "env": {
+        "mocha": true
+    }
+}
