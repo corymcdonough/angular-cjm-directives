@@ -98,7 +98,7 @@ module.exports = function(grunt) {
       watch: {
         background: true
       },
-      continuous: {
+      single: {
         singleRun: true
       },
       // jenkins: {
@@ -112,7 +112,7 @@ module.exports = function(grunt) {
         singleRun: true,
         autoWatch: false,
         reporters: ['dots'],
-        browsers: ['Firefox', 'Chrome_travis_ci']
+        browsers: ['Firefox']
       },
       coverage: {
         preprocessors: {
@@ -124,9 +124,9 @@ module.exports = function(grunt) {
   });
 
   // Default task(s).
-  grunt.registerTask('validate', ['ddescribe-iit', 'eslint']);
-  grunt.registerTask('make', ['validate', 'test', 'build']);
-  grunt.registerTask('default', 'validate', 'test');
+  grunt.registerTask('before-test', ['ddescribe-iit', 'eslint']);
+  grunt.registerTask('after-test', ['build']);
+  grunt.registerTask('default', ['before-test', 'test', 'after-test']);
 
   // Basic Grunt functions
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L290-L293
@@ -280,8 +280,8 @@ module.exports = function(grunt) {
         grunt.util._.extend(karmaOptions, coverageOpts);
         grunt.config.set('karma.options', karmaOptions);
       }
-      //grunt.task.run(isToRunJenkinsTask ? 'karma:jenkins' : 'karma:continuous');
-      grunt.task.run('karma:continuous');
+      //grunt.task.run(isToRunJenkinsTask ? 'karma:jenkins' : 'karma:single');
+      grunt.task.run('karma:single');
     }
   });
 
