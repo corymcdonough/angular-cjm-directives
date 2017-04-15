@@ -112,7 +112,7 @@ module.exports = function(grunt) {
         singleRun: true,
         autoWatch: false,
         reporters: ['dots'],
-        browsers: ['Firefox']
+        browsers: ['Firefox', 'Chrome_travis_ci']
       },
       coverage: {
         preprocessors: {
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
   // Default task(s).
   grunt.registerTask('validate', ['ddescribe-iit', 'eslint']);
   grunt.registerTask('make', ['validate', 'test', 'build']);
-  grunt.registerTask('default', 'make');
+  grunt.registerTask('default', 'validate', 'test');
 
   // Basic Grunt functions
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L290-L293
