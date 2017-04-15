@@ -1,15 +1,15 @@
-angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
+angular.module('asw.subwindow.resiz', ['asw.subwindow.bounding'])
   /* Usage:
-   **   <div cjm-resiz>
-   **   <div cjm-resiz="childHandleSelector">
+   **   <div asw-resiz>
+   **   <div asw-resiz="childHandleSelector">
    **
    ** Optional Attributes:
    **
-   **   cjm-resiz-bounding-parent: Bounds this resiz by parent rect
-   **   cjm-resiz-bounding-id:     Bounds this resiz by id
+   **   asw-resiz-bounding-parent: Bounds this resiz by parent rect
+   **   asw-resiz-bounding-id:     Bounds this resiz by id
    **
    */
-  .directive('cjmResiz', ['$window', '$document', 'cjmBoundingService', function($window, $document, $bounding) {
+  .directive('aswResiz', ['$window', '$document', 'subwindowBoundingService', function($window, $document, $bounding) {
     return {
       restrict: 'A',
       link(scope, element, attrs) {
@@ -48,14 +48,14 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
         var boundingElement = false;
         var container = false;
 
-        if(attrs.cjmResiz) {
-          handleElem = angular.element(element[0].querySelector(attrs.cjmResiz));
+        if(attrs.aswResiz) {
+          handleElem = angular.element(element[0].querySelector(attrs.aswResiz));
         }
 
-        if(attrs.cjmResizBoundingParent !== undefined) {
+        if(attrs.aswResizBoundingParent !== undefined) {
           boundingElement = angular.element(element[0].parentElement);
-        } else if(attrs.cjmResizBoundingId) {
-          var elemById = $document[0].getElementById(attrs.cjmResizBoundingId);
+        } else if(attrs.aswResizBoundingId) {
+          var elemById = $document[0].getElementById(attrs.aswResizBoundingId);
           if(elemById) {
             boundingElement = angular.element(elemById);
           }
@@ -233,29 +233,29 @@ angular.module('cjm.directives.resiz', ['cjm.directives.bounding'])
         }
 
         function getMinimums() {
-          if(attrs.cjmResizMinWidthHeight !== undefined) {
-            if(!attrs.cjmResizMinWidthHeight) {
+          if(attrs.aswResizMinWidthHeight !== undefined) {
+            if(!attrs.aswResizMinWidthHeight) {
               defaultMinWidth();
               defaultMinHeight();
-            } else if(typeof attrs.cjmResizMinWidthHeight === 'string') {
-              var minWidthHeight = attrs.cjmResizMinWidthHeight.split('x');
+            } else if(typeof attrs.aswResizMinWidthHeight === 'string') {
+              var minWidthHeight = attrs.aswResizMinWidthHeight.split('x');
               minWidth = Math.max(parseInt(minWidthHeight[0], 10), 0);
               minHeight = Math.max(parseInt(minWidthHeight[1], 10), 0);
             }
           } else {
-            if(attrs.cjmResizMinWidth !== undefined) {
-              if(!attrs.cjmResizMinWidth) {
+            if(attrs.aswResizMinWidth !== undefined) {
+              if(!attrs.aswResizMinWidth) {
                 defaultMinWidth();
               } else {
-                minWidth = Math.max(attrs.cjmResizMinWidth, 0);
+                minWidth = Math.max(attrs.aswResizMinWidth, 0);
               }
             }
 
-            if(attrs.cjmResizMinHeight !== undefined) {
-              if(!attrs.cjmResizMinHeight) {
+            if(attrs.aswResizMinHeight !== undefined) {
+              if(!attrs.aswResizMinHeight) {
                 defaultMinHeight();
               } else {
-                minHeight = Math.max(attrs.cjmResizMinHeight, 0);
+                minHeight = Math.max(attrs.aswResizMinHeight, 0);
               }
             }
           }

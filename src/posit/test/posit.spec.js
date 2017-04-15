@@ -1,20 +1,30 @@
 'use strict';
+describe('subwindowBoundingService', function() {
+  // var subwindowBoundingService;
 
-describe('Directive: positionable', function() {
-  // load the directive's module and view
-  // beforeEach(module('cartographyApp.mypositionable'));
-  // beforeEach(module('app/mypositionable/mypositionable.html'));
+  // load the module and services we want to test
+  beforeEach(function() {
+    module('asw.subwindow.bounding');
+    module('asw.subwindow.posit');
+  });
 
-  // var element, scope;
+  describe('asw.subwindow.posit', function() {
+    var element;
+    var scope;
+    beforeEach(inject(function($rootScope) {
+      scope = $rootScope.$new();
+    }));
 
-  // beforeEach(inject(function($rootScope) {
-  //   scope = $rootScope.$new();
-  // }));
+    it('should add an event to the handle', inject(function($compile) {
+      var e = jQuery.Event('mousedown');
+      e.target = element;
+      e.preventDefault = sinon.spy();
 
-  // it('should make hidden element visible', inject(function($compile) {
-  //   element = angular.element('<mypositionable></mypositionable>');
-  //   element = $compile(element)(scope);
-  //   scope.$apply();
-  //   expect(element.text()).to.equal('this is the positionable directive');
-  // }));
+      element = $compile('<div asw-posit></div>')(scope);
+      scope.$apply();
+      element.trigger(e);
+
+      expect(e.preventDefault.called).to.equal(true);
+    }));
+  });
 });

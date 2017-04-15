@@ -1,9 +1,15 @@
 {
-    "extends": "./angular.eslintrc",
+    "extends": ["./angular.eslintrc"],
+    "plugins": [
+    	"sinon"
+    ],
     "globals": {
-        "inject": true
+        "inject": true,
+        "expect": true,
+        "sinon": true
     },
     "env": {
-        "mocha": true
+        "mocha": true,
+        "jquery": true
     }
 }

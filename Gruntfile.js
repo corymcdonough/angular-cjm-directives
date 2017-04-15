@@ -1,5 +1,6 @@
 /*
  ** This Gruntfile is based heavily on the Gruntfile from UI Bootstrap.
+ ** Copyright (c) 2012-2017 the AngularUI Team, https://github.com/organizations/angular-ui/teams/291112
  ** https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js
  */
 var marked = require('marked');
@@ -16,12 +17,12 @@ module.exports = function(grunt) {
     modules: [], // to be filled in by build task
     pkg: grunt.file.readJSON('package.json'),
     dist: 'dist',
-    filename: 'angular-cjm-directives',
+    filename: 'angular-subwindow',
     filenamecustom: '<%= filename %>-custom',
     buildname: '<%= dist %>/<%= filename %>-<%= pkg.version %>',
     license: grunt.file.read('LICENSE').replace(/(^|\n)(.*)*/g, '** $2'),
     meta: {
-      modules: 'angular.module("cjm.directives", [<%= srcModules %>]);',
+      modules: 'angular.module("asw.subwindow", [<%= srcModules %>]);',
       cssInclude: '',
       cssFileBanner: '/* Include this file in your html if you are using the CSP mode. */\n\n',
       cssFileDest: '<%= buildname %>-csp.css',
@@ -89,13 +90,43 @@ module.exports = function(grunt) {
       files: [
         'src/**/*.spec.js'
       ]
+    },
+    karma: {
+      options: {
+        configFile: 'karma.conf.js'
+      },
+      watch: {
+        background: true
+      },
+      continuous: {
+        singleRun: true
+      },
+      // jenkins: {
+      //   singleRun: true,
+      //   autoWatch: false,
+      //   colors: false,
+      //   reporters: ['dots', 'junit'],
+      //   browsers: ['Chrome', 'ChromeCanary', 'Firefox', 'Opera', '/Users/jenkins/bin/safari.sh']
+      // },
+      travis: {
+        singleRun: true,
+        autoWatch: false,
+        reporters: ['dots'],
+        browsers: ['Firefox']
+      },
+      coverage: {
+        preprocessors: {
+          'src/*/*.js': 'coverage'
+        },
+        reporters: ['progress', 'coverage']
+      }
     }
   });
 
   // Default task(s).
   grunt.registerTask('validate', ['ddescribe-iit', 'eslint']);
-  grunt.registerTask('make', ['validate', 'build']);
-  grunt.registerTask('default', 'validate');
+  grunt.registerTask('make', ['validate', 'test', 'build']);
+  grunt.registerTask('default', 'make');
 
   // Basic Grunt functions
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L290-L293
@@ -136,7 +167,7 @@ module.exports = function(grunt) {
   });
 
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L207-L288
-  //Common cjm.directives module containing all modules for src and templates
+  //Common asw.subwindow module containing all modules for src and templates
   //findModule: Adds a given module to config
   var foundModules = {};
 
@@ -162,19 +193,19 @@ module.exports = function(grunt) {
       return `"${str}"`;
     }
 
-    // function enquoteCJMDir(str) {
-    //   return enquote(`cjm/${str}`);
+    // function enquoteSubwindowDir(str) {
+    //   return enquote(`subwindow/${str}`);
     // }
 
     var module = {
       name,
-      moduleName: enquote(`cjm.directives.${name}`),
+      moduleName: enquote(`asw.subwindow.${name}`),
       displayName: ucwords(breakup(name, ' ')),
       srcFiles: grunt.file.expand([`src/${name}/*.js`, `!src/${name}/index.js`, `!src/${name}/index-nocss.js`]),
       cssFiles: grunt.file.expand(`src/${name}/*.css`),
       // tplFiles: grunt.file.expand(`template/${name}/*.html`),
       // tpljsFiles: grunt.file.expand(`template/${name}/*.html.js`),
-      // tplModules: grunt.file.expand(`template/${name}/*.html`).map(enquoteCJMDir),
+      // tplModules: grunt.file.expand(`template/${name}/*.html`).map(enquoteSubwindowDir),
       dependencies: dependenciesForModule(name),
       docs: {
         md: grunt.file.expand(`src/${name}/docs/*.md`)
@@ -216,9 +247,9 @@ module.exports = function(grunt) {
         var depArrayEnd = contents.indexOf(']', depArrayStart);
         var dependencies = contents.substring(depArrayStart + 1, depArrayEnd);
         dependencies.split(',').forEach(function(dep) {
-          if(dep.indexOf('cjm.directives.') > -1) {
+          if(dep.indexOf('asw.subwindow.') > -1) {
             var depName = dep.trim()
-              .replace('cjm.directives.', '')
+              .replace('asw.subwindow.', '')
               .replace(/['"]/g, '');
             if(deps.indexOf(depName) < 0) {
               deps.push(depName);
@@ -231,8 +262,28 @@ module.exports = function(grunt) {
     return deps;
   }
 
+  // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L350-L365
+  grunt.registerTask('test', 'Run tests on singleRun karma server', function() {
+    //this task can be executed in 3 different environments: local, Travis-CI and Jenkins-CI
+    //we need to take settings for each one into account
+    // eslint-disable-next-line no-process-env
+    if(process.env.TRAVIS) {
+      grunt.task.run('karma:travis');
+    } else {
+      //var isToRunJenkinsTask = !!args.length;
+      if(grunt.option('coverage')) {
+        var karmaOptions = grunt.config.get('karma.options');
+        var coverageOpts = grunt.config.get('karma.coverage');
+        grunt.util._.extend(karmaOptions, coverageOpts);
+        grunt.config.set('karma.options', karmaOptions);
+      }
+      //grunt.task.run(isToRunJenkinsTask ? 'karma:jenkins' : 'karma:continuous');
+      grunt.task.run('karma:continuous');
+    }
+  });
+
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L295-L348
-  grunt.registerTask('build', 'Create cjm-directives build files', function(...args) {
+  grunt.registerTask('build', 'Create asw.subwindow build files', function(...args) {
     //If arguments define what modules to build, build those. Else, everything
     if(args.length) {
       args.forEach(findModule);
@@ -316,7 +367,7 @@ module.exports = function(grunt) {
       .replace(/'/g, '\\\'')
       .replace(/\r?\n/g, '\\n');
     // eslint-disable-next-line max-len
-    js = `angular.module('cjm.directives.${moduleName}').run(function() {!angular.$$csp().noInlineStyle && !angular.$$cjm${_.capitalize(moduleName)}Css && angular.element(document).find('head').prepend('<style type="text/css">${css}</style>'); angular.$$cjm${_.capitalize(moduleName)}Css = true; });`;
+    js = `angular.module('asw.subwindow.${moduleName}').run(function() {!angular.$$csp().noInlineStyle && !angular.$$asw${_.capitalize(moduleName)}Css && angular.element(document).find('head').prepend('<style type="text/css">${css}</style>'); angular.$$asw${_.capitalize(moduleName)}Css = true; });`;
     state.js.push(js);
 
     return state;

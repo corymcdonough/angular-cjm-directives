@@ -1,5 +1,5 @@
-angular.module('cjm.directives.bounding', [])
-  .factory('cjmBoundingService', ['$window', function($window) {
+angular.module('asw.subwindow.bounding', [])
+  .factory('subwindowBoundingService', ['$window', function($window) {
     return {
       getBoundingContainer(element, boundingElement, bInsideBorders, bInsidePadding) {
         var container = false;

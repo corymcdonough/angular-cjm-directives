@@ -1,3 +1,3 @@
-require('./dist/angular-cjm-directives');
+require('./dist/angular-subwindow');
 
-module.exports = 'cjm.directives';
+module.exports = 'asw.subwindow';

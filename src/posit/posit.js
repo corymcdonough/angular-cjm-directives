@@ -1,15 +1,15 @@
-angular.module('cjm.directives.posit', ['cjm.directives.bounding'])
+angular.module('asw.subwindow.posit', ['asw.subwindow.bounding'])
   /* Usage:
-   **   <div cjm-posit>
-   **   <div cjm-posit="childHandleSelector">
+   **   <div asw-posit>
+   **   <div asw-posit="childHandleSelector">
    **
    ** Optional Attributes:
    **
-   **   cjm-posit-bounding-parent: Bounds this posit by parent rect
-   **   cjm-posit-bounding-id:     Bounds this posit by id
+   **   asw-posit-bounding-parent: Bounds this posit by parent rect
+   **   asw-posit-bounding-id:     Bounds this posit by id
    **
    */
-  .directive('cjmPosit', ['$document', 'cjmBoundingService', function($document, $bounding) {
+  .directive('aswPosit', ['$document', 'subwindowBoundingService', function($document, $bounding) {
     return {
       restrict: 'A',
       link(scope, element, attrs) {
@@ -26,14 +26,14 @@ angular.module('cjm.directives.posit', ['cjm.directives.bounding'])
         });
 
         var handleElem = false;
-        if(attrs.cjmPosit) {
-          handleElem = angular.element(element[0].querySelector(attrs.cjmPosit));
+        if(attrs.aswPosit) {
+          handleElem = angular.element(element[0].querySelector(attrs.aswPosit));
         }
 
-        if(attrs.cjmPositBoundingParent !== undefined) {
+        if(attrs.aswPositBoundingParent !== undefined) {
           boundingElement = angular.element(element[0].parentElement);
-        } else if(attrs.cjmPositBoundingId) {
-          var elemById = $document[0].getElementById(attrs.cjmPositBoundingId);
+        } else if(attrs.aswPositBoundingId) {
+          var elemById = $document[0].getElementById(attrs.aswPositBoundingId);
           if(elemById) {
             boundingElement = angular.element(elemById);
           }
