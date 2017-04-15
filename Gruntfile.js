@@ -130,8 +130,9 @@ module.exports = function(grunt) {
 
   // Basic Grunt functions
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L290-L293
-  grunt.registerTask('dist', 'Override dist directory', function(...args) {
-    var dir = args[0];
+  grunt.registerTask('dist', 'Override dist directory', function() {
+    // eslint-disable-next-line no-invalid-this
+    var dir = this.args[0];
     if(dir) {
       grunt.config('dist', dir);
     }
@@ -162,8 +163,9 @@ module.exports = function(grunt) {
     return version;
   }
 
-  grunt.registerTask('version', 'Set version. If no arguments, it just takes off suffix', function(...args) {
-    setVersion(args[0], args[1]);
+  grunt.registerTask('version', 'Set version. If no arguments, it just takes off suffix', function() {
+    // eslint-disable-next-line no-invalid-this
+    setVersion(this.args[0], this.args[1]);
   });
 
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L207-L288
@@ -270,7 +272,8 @@ module.exports = function(grunt) {
     if(process.env.TRAVIS) {
       grunt.task.run('karma:travis');
     } else {
-      //var isToRunJenkinsTask = !!args.length;
+      // eslint-disable-next-line no-invalid-this
+      //var isToRunJenkinsTask = !!this.args.length;
       if(grunt.option('coverage')) {
         var karmaOptions = grunt.config.get('karma.options');
         var coverageOpts = grunt.config.get('karma.coverage');
@@ -283,10 +286,12 @@ module.exports = function(grunt) {
   });
 
   // https://github.com/angular-ui/bootstrap/blob/0d79005f8d1f4d674bb04ba93c41bb9c06280b4f/Gruntfile.js#L295-L348
-  grunt.registerTask('build', 'Create asw.subwindow build files', function(...args) {
+  grunt.registerTask('build', 'Create asw.subwindow build files', function() {
     //If arguments define what modules to build, build those. Else, everything
-    if(args.length) {
-      args.forEach(findModule);
+    // eslint-disable-next-line no-invalid-this
+    if(this.args.length) {
+      // eslint-disable-next-line no-invalid-this
+      this.args.forEach(findModule);
       grunt.config('filename', grunt.config('filenamecustom'));
     } else {
       grunt.file.expand({
@@ -324,7 +329,8 @@ module.exports = function(grunt) {
     }
 
     var moduleFileMapping = _.clone(modules, true);
-    moduleFileMapping.forEach(module => Reflect.deleteProperty(module, 'docs'));
+    // eslint-disable-next-line prefer-reflect
+    moduleFileMapping.forEach(module => delete module.docs);
 
     grunt.config('moduleFileMapping', moduleFileMapping);
 
